@@ -1,9 +1,7 @@
 package se.jakub.day1;
 
-import java.io.FileNotFoundException;
-
 import static java.util.stream.Collectors.toList;
-import static se.jakub.DayReader.inputReader;
+import static se.jakub.reader.DayReader.inputReader;
 
 
 public class Main {

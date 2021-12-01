@@ -1,4 +1,4 @@
-package se.jakub;
+package se.jakub.reader;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
