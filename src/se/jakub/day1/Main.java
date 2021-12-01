@@ -1,32 +1,38 @@
 package se.jakub.day1;
 
-import se.jakub.DayReader;
-
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Scanner;
+
+import static java.util.stream.Collectors.toList;
+import static se.jakub.DayReader.inputReader;
+
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
-        var t = new Scanner(DayReader.inputReader(1, 1));
-        var l = new ArrayList<Integer>();
-        while (t.hasNextLine()) {
-            l.add(Integer.valueOf(t.nextLine()));
-        }
+    public static void main(String[] args) {
+        System.out.println(partOne()); // 1298
+        System.out.println(partTwo()); // 1248
+    }
 
-        for (int i = 0; i < l.size(); i++) {
-            for (int j = 0; j < l.size(); j++) {
-                for (int k = 0; k < l.size(); k++) {
+    private static int partOne() {
+        var l = inputReader(1, 1).map(Integer::parseInt).collect(toList());
 
-                    if (i == j) {
-                        continue;
-                    }
-
-                    if (l.get(k) + l.get(i) + l.get(j) == 2020) {
-                        System.out.println(l.get(k) * l.get(i) * l.get(j));
-                    }
-                }
+        var c = 0;
+        for (int i = 1; i < l.size(); i++) {
+            if (l.get(i) > l.get(i - 1)) {
+                c++;
             }
         }
+        return c;
+    }
+
+    private static int partTwo() {
+        var l = inputReader(1, 2).map(Integer::parseInt).collect(toList());
+
+        var c = 0;
+        for (int i = 2; i < l.size() - 1; i++) {
+            if ((l.get(i - 2) + l.get(i - 1) + l.get(i)) < (l.get(i - 1) + l.get(i) + l.get(i + 1))) {
+                c++;
+            }
+        }
+        return c;
     }
 }
