@@ -18,5 +18,4 @@ public class DayReader {
             throw new RuntimeException("file not found", e);
         }
     }
-
 }
