@@ -2,7 +2,6 @@ package se.jakub.day3;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.lang.Integer.*;
 import static java.util.stream.Collectors.toList;
