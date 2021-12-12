@@ -20,25 +20,6 @@
 
 </div>
 
-
-
-<div align="center">
-
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-![Alt Text](https://cdn.betterttv.net/emote/5d2dc7dcff6ed3680130eb6d/2x)
-
-</div>
-
 <div align="center">
 
 ![Alt Text](https://cdn.betterttv.net/emote/5b6c5efadd8fb0185163bd4f/2x)
@@ -51,10 +32,7 @@
 ![Alt Text](https://cdn.betterttv.net/emote/5b6c5efadd8fb0185163bd4f/2x)
 ![Alt Text](https://cdn.betterttv.net/emote/5b6c5efadd8fb0185163bd4f/2x)
 ![Alt Text](https://cdn.betterttv.net/emote/5b6c5efadd8fb0185163bd4f/2x)
-
-
 </div>
-
 
 <div align="center">
 
