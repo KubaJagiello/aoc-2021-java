@@ -24,43 +24,33 @@ public class Main {
                 if (x == y)
                     continue;
 
-                var hehe = String.format("[%s,%s]", l.get(x), l.get(y));
-
                 list = new LinkedList<>();
-                for (var c : hehe.toCharArray()) {
+                for (var c : String.format("[%s,%s]", l.get(x), l.get(y)).toCharArray()) {
                     list.addLast(String.valueOf(c));
                 }
 
-                boolean shouldExplode;
-                boolean shouldSplit;
-
-                do {
-                    shouldExplode = false;
-                    shouldSplit = false;
+                while(true){
+                    var shouldExplode = false;
+                    var shouldSplit = false;
                     var currentIndex = 0;
                     var currentDepth = 0;
 
-
                     for (int i = 0; i < list.size(); i++) {
-                        var c = list.get(i);
-                        if (c.equals("[")) {
+                        if ("[".equals(list.get(i))) {
                             currentDepth++;
-                            currentIndex++;
                             continue;
-                        } else if (c.equals("]")) {
+                        } else if ("]".equals(list.get(i))) {
                             currentDepth--;
-                            currentIndex++;
                             continue;
-                        } else if (c.equals(",")) {
-                            currentIndex++;
+                        } else if (",".equals(list.get(i))) {
                             continue;
                         }
 
                         if (currentDepth > 4) {
                             shouldExplode = true;
+                            currentIndex = i;
                             break;
                         }
-                        currentIndex++;
                     }
 
                     if (shouldExplode) {
@@ -69,81 +59,48 @@ public class Main {
 
                         for (int i = currentIndex - 1; i >= 0; i--) {
                             if (!list.get(i).equals(",") && !list.get(i).equals("[") && !list.get(i).equals("]")) {
-                                var number = parseInt(list.remove(i));
-                                list.add(i, String.valueOf(a + number));
+                                list.add(i, String.valueOf(a + parseInt(list.remove(i))));
                                 break;
                             }
                         }
-
-                        // add right
                         for (int i = currentIndex + 3; i < list.size(); i++) {
                             if (!list.get(i).equals(",") && !list.get(i).equals("[") && !list.get(i).equals("]")) {
-                                var number = parseInt(list.remove(i));
-                                list.add(i, String.valueOf(b + number));
+                                list.add(i, String.valueOf(b + parseInt(list.remove(i))));
                                 break;
                             }
                         }
-                        list.remove(currentIndex - 1); // [
-                        list.remove(currentIndex - 1); // x
-                        list.remove(currentIndex - 1); // ,
-                        list.remove(currentIndex - 1); // y
-                        list.remove(currentIndex - 1); // ]
+                        for (int i = 0; i < 5; i++) {
+                            list.remove(currentIndex - 1);
+                        }
                         list.add(currentIndex - 1, "0");
                         continue;
                     }
 
-                    shouldExplode = false;
-                    shouldSplit = false;
-                    currentIndex = 0;
-                    currentDepth = 0;
-
-                    for (var c : list) {
-                        if (c.equals("[")) {
-                            currentDepth++;
-                            currentIndex++;
-                            continue;
-                        } else if (c.equals("]")) {
-                            currentDepth--;
-                            currentIndex++;
-                            continue;
-                        } else if (c.equals(",")) {
-                            currentIndex++;
+                    for (int i = 0; i < list.size(); i++) {
+                        if ("[],".contains(list.get(i))) {
                             continue;
                         }
 
-                    /*if (currentDepth > 4) {
-                        shouldExplode = true;
-                        break;
-                    } */
-                        if (parseInt(c) > 9) {
+                        if (parseInt(list.get(i)) > 9) {
                             shouldSplit = true;
+                            var n = parseInt(list.get(i));
+                            list.remove(i);
+                            list.add(i, "]");
+                            list.add(i, String.valueOf(n - (n / 2)));
+                            list.add(i, ",");
+                            list.add(i, String.valueOf(n / 2));
+                            list.add(i, "[");
                             break;
                         }
-                        currentIndex++;
                     }
-
-                    if (shouldSplit) {
-                        var n = parseInt(list.get(currentIndex));
-                        int a = n / 2;
-                        int b = n - a;
-                        list.remove(currentIndex);
-                        list.add(currentIndex, "]");
-                        list.add(currentIndex, String.valueOf(b));
-                        list.add(currentIndex, ",");
-                        list.add(currentIndex, String.valueOf(a));
-                        list.add(currentIndex, "[");
-                    }
-                    //printList(list);
-                } while (shouldExplode || shouldSplit);
-
+                    if (shouldSplit)
+                        continue;
+                    break;
+                }
 
                 while (true) {
-                    if (list.size() == 3) {
-                        maxMagnitude = Math.max(maxMagnitude, Integer.parseInt(list.get(1)));
-                        break;
-                    }
                     if (list.size() == 1) {
-                        maxMagnitude = Math.max(maxMagnitude, Integer.parseInt(list.get(0)));
+                        maxMagnitude = Math.max(maxMagnitude, parseInt(list.get(0)));
                         break;
                     }
                     for (int i = 1; i < list.size() - 1; i++) {
@@ -151,20 +108,14 @@ public class Main {
                         var b = list.get(i);
                         var c = list.get(i + 1);
                         if (b.equals(",") && !"[]".contains(a) && !"[]".contains(c)) {
-                            var nA = Integer.parseInt(a) * 3;
-                            var nC = Integer.parseInt(c) * 2;
-                            var m = nA + nC;
-                            list.remove(i - 2); // [
-                            list.remove(i - 2); // x
-                            list.remove(i - 2); // ,
-                            list.remove(i - 2); // y
-                            list.remove(i - 2); // ]
-                            list.add(i - 2, String.valueOf(m));
+                            for (int j = 0; j < 5; j++) {
+                                list.remove(i - 2);
+                            }
+                            list.add(i - 2, String.valueOf(parseInt(a) * 3 + parseInt(c) * 2));
                             break;
                         }
                     }
                 }
-
             }
         }
         return maxMagnitude;
@@ -235,7 +186,6 @@ public class Main {
                         }
                     }
 
-                    // add right
                     for (int i = currentIndex + 3; i < list.size(); i++) {
                         if (!list.get(i).equals(",") && !list.get(i).equals("[") && !list.get(i).equals("]")) {
                             var number = parseInt(list.remove(i));
@@ -243,11 +193,9 @@ public class Main {
                             break;
                         }
                     }
-                    list.remove(currentIndex - 1); // [
-                    list.remove(currentIndex - 1); // x
-                    list.remove(currentIndex - 1); // ,
-                    list.remove(currentIndex - 1); // y
-                    list.remove(currentIndex - 1); // ]
+                    for (int t = 0; t < 5; t++) {
+                        list.remove(currentIndex - 1); // [
+                    }
                     list.add(currentIndex - 1, "0");
                     continue;
                 }
@@ -296,11 +244,11 @@ public class Main {
 
         while (true) {
             if (list.size() == 3) {
-                magnitude = Integer.parseInt(list.get(1));
+                magnitude = parseInt(list.get(1));
                 break;
             }
             if (list.size() == 1) {
-                magnitude = Integer.parseInt(list.get(0));
+                magnitude = parseInt(list.get(0));
                 break;
             }
             for (int i = 1; i < list.size() - 1; i++) {
@@ -308,21 +256,17 @@ public class Main {
                 var b = list.get(i);
                 var c = list.get(i + 1);
                 if (b.equals(",") && !"[]".contains(a) && !"[]".contains(c)) {
-                    var nA = Integer.parseInt(a) * 3;
-                    var nC = Integer.parseInt(c) * 2;
+                    var nA = parseInt(a) * 3;
+                    var nC = parseInt(c) * 2;
                     var m = nA + nC;
-                    list.remove(i - 2); // [
-                    list.remove(i - 2); // x
-                    list.remove(i - 2); // ,
-                    list.remove(i - 2); // y
-                    list.remove(i - 2); // ]
+                    for (int t = 0; t < 5; t++) {
+                        list.remove(i - 2);
+                    }
                     list.add(i - 2, String.valueOf(m));
                     break;
                 }
             }
         }
-
         return magnitude;
-
     }
 }
