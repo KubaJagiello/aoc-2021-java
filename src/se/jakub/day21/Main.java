@@ -1,11 +1,7 @@
 package se.jakub.day21;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Objects;
-
-import static java.util.stream.Collectors.toList;
-import static se.jakub.reader.DayReader.inputReader;
 
 
 public class Main {
@@ -55,72 +51,94 @@ public class Main {
         /*
             Player 1 starting position: 8
             Player 2 starting position: 4
+            dd
          */
-        var aPoints = 0;
-        var aPos = 7;
-        var bPoints = 0;
-        var bPos = 3;
-        var dice = new DiracDice();
-        var numberOfThrows = 0;
+        /* TEST CASE
+        Player 1 starting position: 4
+        Player 2 starting position: 8
+
+         */
+        var aPos = 8;
+        var bPos = 4;
         // [aPos][bPos][dice]
 //                                                                       [7,3]
 //                      [8,3]                                            [9,3]
 //      [9,3]          [10,3]           [1,3]            [10,3]          [1,3]           [2,3]
 //[10,3][1,3][2,3] [1,3][2,3][3,3] [2,3][3,3][4,3]  [1,3][2,3][3,3] [2,3][3,3][4,3] [3,3][4,3][5,3]
 
-        var mem = new HashMap<GameState, Integer>();
-
-        while (true) {
-            for (int i = 0; i < 3; i++) {
-                aPos = (aPos + dice.throwDice()) % 10;
-            }
-            numberOfThrows += 3;
-            aPoints += aPos + 1;
-
-            if (aPoints >= 21) {
-
-                return bPoints * numberOfThrows;
-            }
-
-            for (int i = 0; i < 3; i++) {
-                bPos = (bPos + dice.throwDice()) % 10;
-            }
-            numberOfThrows += 3;
-            bPoints += bPos + 1;
-
-            if (bPoints >= 21) {
-                return aPoints * numberOfThrows;
-            }
-
-        }
+        var mem = new HashMap<GameState, GamesWon>();
+        var playerA = new Player(aPos - 1, 0);
+        var playerB = new Player(bPos - 1, 0);
+        var r = solvePartTwo(new GameState(playerA, playerB, true), mem, true);
+        System.out.println(r.aWon + "," + r.bWon);
+        return 0;
     }
 
-    static GameState solvePartTwo(Player a, Player b, HashSet<GameState> mem) {
-        if (a.points >= 21) {
-            return new GameState(1, 0, a, b);
+    static GamesWon solvePartTwo(GameState gameState, HashMap<GameState, GamesWon> mem, boolean playerA) {
+        if (gameState.a.points >= 21) {
+            return new GamesWon(1, 0);
         }
-        if (b.points >= 21) {
-            return new GameState(0, 1, a, b);
+        if (gameState.b.points >= 21) {
+            return new GamesWon(0, 1);
         }
 
-        var gameState = new GameState(0, 0, a,b);
+        if (mem.containsKey(gameState)) {
+            return mem.get(gameState);
+        }
+        var wins = new GamesWon(0, 0);
+        var state = new GameState(gameState.a, gameState.b, playerA);
+
         for (int i = 1; i <= 3; i++) {
             for (int j = 1; j <= 3; j++) {
                 for (int k = 1; k <= 3; k++) {
-                    var newA = new Player(a.pos, a.points);
-                    newA.pos = (newA.pos + i + j + k) % 10;
-                    newA.points += newA.pos + 1;
-                    var g = solvePartTwo(newA, b, mem);
-                    gameState.aWon += g.aWon;
-                    gameState.bWon += g.bWon;
-
+                    if (playerA) {
+                        var newAPos = (gameState.a.pos + k + i + j) % 10;
+                        var newA = new Player(newAPos, gameState.a.points + newAPos + 1);
+                        var newB = new Player(gameState.b.pos, gameState.b.points);
+                        var newGameState = new GameState(newA, newB, false);
+                        var r = solvePartTwo(newGameState, mem, false);
+                        wins.aWon += r.aWon;
+                        wins.bWon += r.bWon;
+                    } else {
+                        var newBPos = (gameState.b.pos + k + i + j) % 10;
+                        var newA = new Player(gameState.a.pos, gameState.a.points);
+                        var newB = new Player(newBPos, gameState.b.points + newBPos + 1);
+                        var newGameState = new GameState(newA, newB, true);
+                        var r = solvePartTwo(newGameState, mem, true);
+                        wins.aWon += r.aWon;
+                        wins.bWon += r.bWon;
+                    }
                 }
             }
         }
 
-        mem.put(gameState)
+        mem.put(state, wins);
+        return wins;
+    }
+}
 
-        return gameState;
+class GameState {
+    Player a;
+    Player b;
+    boolean playerA;
+
+    public GameState(Player a, Player b, boolean playerA) {
+        this.a = a;
+        this.b = b;
+        this.playerA = playerA;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameState gameState = (GameState) o;
+        return playerA == gameState.playerA && Objects.equals(a, gameState.a) && Objects.equals(b, gameState.b);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(a, b, playerA);
     }
 }
 
@@ -148,50 +166,30 @@ class Player {
     }
 }
 
-class GameState {
-    int aWon;
-    int bWon;
-    Player a;
-    Player b;
 
+class GamesWon {
+    long aWon;
+    long bWon;
+
+    public GamesWon(int aWon, int bWon) {
+        this.aWon = aWon;
+        this.bWon = bWon;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GameState gameState = (GameState) o;
-        return aWon == gameState.aWon && bWon == gameState.bWon && Objects.equals(a, gameState.a) && Objects.equals(b, gameState.b);
+        GamesWon gameState = (GamesWon) o;
+        return aWon == gameState.aWon && bWon == gameState.bWon;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(aWon, bWon, a, b);
-    }
-
-    public GameState(int aWon, int bWon, Player a, Player b) {
-        this.aWon = aWon;
-        this.bWon = bWon;
-        this.a = a;
-        this.b = b;
+        return Objects.hash(aWon, bWon);
     }
 }
 
-class DiracDice {
-    int value;
-
-    DiracDice() {
-        value = 0;
-    }
-
-    int throwDice() {
-        if (value == 3) {
-            value = 1;
-        } else {
-            value++;
-        }
-        return value;
-    }
-}
 
 class Dice {
     int value;
